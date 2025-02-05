@@ -14,10 +14,6 @@ body {
 }
 
 /* Custom Component */
-.repeater-tabs {
-  margin-bottom: 1rem;
-}
-
 .repeater-tabs__list {
   display: flex;
   gap: 0.5rem;
