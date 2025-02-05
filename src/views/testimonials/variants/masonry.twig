@@ -1,0 +1,81 @@
+<div class="testimonials testimonials--masonry">
+  <h2>{{ title }}</h2>
+  
+  <div class="testimonials__masonry">
+    {% for item in testimonials %}
+      <div class="testimonial-item">
+        {% if item.image %}
+          <div class="testimonial-item__header">
+            <img 
+              src="{{ item.image.url }}" 
+              alt="{{ item.author }}"
+              class="testimonial-item__image"
+            >
+            <div class="testimonial-item__info">
+              <strong>{{ item.author }}</strong>
+              {% if item.position %}
+                <span>{{ item.position }}</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        
+        <blockquote class="testimonial-item__quote">
+          {{ item.quote }}
+        </blockquote>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.testimonials--masonry {
+  padding: 2rem;
+}
+
+.testimonials__masonry {
+  columns: 3 300px;
+  column-gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.testimonial-item {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.testimonial-item__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.testimonial-item__image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.testimonial-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.testimonial-item__info span {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.testimonial-item__quote {
+  font-style: italic;
+  color: #444;
+  line-height: 1.6;
+}
+</style>

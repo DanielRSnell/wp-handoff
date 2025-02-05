@@ -1,0 +1,6 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/handoff.php';
+
+// This file exists to make the command more convenient to use

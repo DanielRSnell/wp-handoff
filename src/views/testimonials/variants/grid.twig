@@ -1,0 +1,73 @@
+<div class="testimonials testimonials--grid">
+  <h2>{{ title }}</h2>
+  
+  <div class="testimonials__grid">
+    {% for item in testimonials %}
+      <div class="testimonial-card">
+        {% if item.image %}
+          <img 
+            src="{{ item.image.url }}" 
+            alt="{{ item.author }}"
+            class="testimonial-card__image"
+          >
+        {% endif %}
+        
+        <blockquote class="testimonial-card__quote">
+          {{ item.quote }}
+        </blockquote>
+        
+        <div class="testimonial-card__author">
+          <strong>{{ item.author }}</strong>
+          {% if item.position %}
+            <span>{{ item.position }}</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.testimonials--grid {
+  padding: 2rem;
+}
+
+.testimonials__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.testimonial-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.testimonial-card__image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.testimonial-card__quote {
+  font-style: italic;
+  margin: 1rem 0;
+  color: #555;
+}
+
+.testimonial-card__author {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.testimonial-card__author span {
+  color: #666;
+  font-size: 0.9em;
+}
+</style>

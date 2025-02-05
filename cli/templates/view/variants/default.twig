@@ -1,0 +1,99 @@
+{#
+  {{name}} Component Template - Default Variant
+  
+  Available Data:
+  - All fields defined in fields.php are available directly
+  - Additional data added by controller.php is also available
+  
+  Example field usage:
+  {{ title }} - Outputs the title field
+  {{ content }} - Outputs the content field
+  
+  Example controller-modified data:
+  {{ generated_at }} - Timestamp added by controller
+  
+  Queried data example:
+  {% if queried_items %}
+    {% for item in queried_items %}
+      {{ item.title }}
+    {% endfor %}
+  {% endif %}
+  
+  Component Structure:
+  - Use BEM naming convention for CSS classes
+  - Component name as block: {{lowercase_name}}
+  - Elements prefixed with {{lowercase_name}}__
+  - Modifiers use --
+  
+  Example:
+  .{{lowercase_name}} (block)
+  .{{lowercase_name}}__title (element)
+  .{{lowercase_name}}--centered (modifier)
+#}
+
+<div class="{{lowercase_name}} {{lowercase_name}}--{{ style }}">
+    {# Example title field usage #}
+    {% if title %}
+        <h2 class="{{lowercase_name}}__title">{{ title }}</h2>
+    {% endif %}
+
+    {# Example content field usage #}
+    {% if content %}
+        <div class="{{lowercase_name}}__content">
+            {{ content }}
+        </div>
+    {% endif %}
+
+    {# Example of using queried items #}
+    {% if queried_items %}
+        <div class="{{lowercase_name}}__items">
+            {% for item in queried_items %}
+                <div class="{{lowercase_name}}__item">
+                    <h3>{{ item.title }}</h3>
+                    <div>{{ item.excerpt }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+/**
+ * Component Styles
+ * 
+ * - Use BEM methodology for CSS structure
+ * - Keep styles scoped to the component
+ * - Use CSS custom properties for theming
+ * - Consider mobile-first approach
+ */
+
+.{{lowercase_name}} {
+    padding: 2rem;
+    /* Add your base styles here */
+}
+
+.{{lowercase_name}}--default {
+    /* Add variant-specific styles here */
+}
+
+.{{lowercase_name}}__title {
+    /* Add title styles here */
+}
+
+.{{lowercase_name}}__content {
+    /* Add content styles here */
+}
+
+/* Responsive Design Example */
+@media (min-width: 768px) {
+    .{{lowercase_name}} {
+        /* Add tablet styles */
+    }
+}
+
+@media (min-width: 1024px) {
+    .{{lowercase_name}} {
+        /* Add desktop styles */
+    }
+}
+</style>

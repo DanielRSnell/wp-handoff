@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html {{ site.language_attributes }}>
+<head>
+    <meta charset="{{ site.charset }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if wp_title %}{{ wp_title }} - {{ site.name }}{% else %}{{ site.name }}{% endif %}</title>
+    {{ function('wp_head') }}
+</head>
+<body class="{{ body_class }}">
+    {% include "@core/header.twig" %}
+
+    <main>
+        {% include "@core/dynamic.twig" with { components: components } %}
+    </main>
+
+    {% include "@core/footer.twig" %}
+    {{ function('wp_footer') }}
+</body>
+</html>

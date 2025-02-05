@@ -1,0 +1,83 @@
+<div class="testimonials testimonials--slider">
+  <h2>{{ title }}</h2>
+  
+  <div class="testimonials__slider">
+    {% for item in testimonials %}
+      <div class="testimonial-slide">
+        <blockquote class="testimonial-slide__quote">
+          {{ item.quote }}
+        </blockquote>
+        
+        <div class="testimonial-slide__author">
+          {% if item.image %}
+            <img 
+              src="{{ item.image.url }}" 
+              alt="{{ item.author }}"
+              class="testimonial-slide__image"
+            >
+          {% endif %}
+          
+          <div class="testimonial-slide__info">
+            <strong>{{ item.author }}</strong>
+            {% if item.position %}
+              <span>{{ item.position }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+.testimonials--slider {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.testimonials__slider {
+  margin-top: 2rem;
+}
+
+.testimonial-slide {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.testimonial-slide__quote {
+  font-size: 1.1em;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.testimonial-slide__author {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.testimonial-slide__image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.testimonial-slide__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.testimonial-slide__info span {
+  color: #666;
+  font-size: 0.9em;
+}
+</style>

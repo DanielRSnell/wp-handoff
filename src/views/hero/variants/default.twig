@@ -1,0 +1,99 @@
+{#
+  Hero Component Template - Default Variant
+  
+  Available Data:
+  - All fields defined in fields.php are available directly
+  - Additional data added by controller.php is also available
+  
+  Example field usage:
+  {{ title }} - Outputs the title field
+  {{ content }} - Outputs the content field
+  
+  Example controller-modified data:
+  {{ generated_at }} - Timestamp added by controller
+  
+  Queried data example:
+  {% if queried_items %}
+    {% for item in queried_items %}
+      {{ item.title }}
+    {% endfor %}
+  {% endif %}
+  
+  Component Structure:
+  - Use BEM naming convention for CSS classes
+  - Component name as block: hero
+  - Elements prefixed with hero__
+  - Modifiers use --
+  
+  Example:
+  .hero (block)
+  .hero__title (element)
+  .hero--centered (modifier)
+#}
+
+<div class="hero hero--{{ style }}">
+    {# Example title field usage #}
+    {% if title %}
+        <h2 class="hero__title">{{ title }}</h2>
+    {% endif %}
+
+    {# Example content field usage #}
+    {% if content %}
+        <div class="hero__content">
+            {{ content }}
+        </div>
+    {% endif %}
+
+    {# Example of using queried items #}
+    {% if queried_items %}
+        <div class="hero__items">
+            {% for item in queried_items %}
+                <div class="hero__item">
+                    <h3>{{ item.title }}</h3>
+                    <div>{{ item.excerpt }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+/**
+ * Component Styles
+ * 
+ * - Use BEM methodology for CSS structure
+ * - Keep styles scoped to the component
+ * - Use CSS custom properties for theming
+ * - Consider mobile-first approach
+ */
+
+.hero {
+    padding: 2rem;
+    /* Add your base styles here */
+}
+
+.hero--default {
+    /* Add variant-specific styles here */
+}
+
+.hero__title {
+    /* Add title styles here */
+}
+
+.hero__content {
+    /* Add content styles here */
+}
+
+/* Responsive Design Example */
+@media (min-width: 768px) {
+    .hero {
+        /* Add tablet styles */
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero {
+        /* Add desktop styles */
+    }
+}
+</style>

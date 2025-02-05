@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+
+if (php_sapi_name() !== 'cli') {
+    exit;
+}
+
+require_once __DIR__ . '/handoff.php';
+
+$cli = new HandoffCLI();
+
+// Show help if no arguments
+if ($argc === 1) {
+    echo "\n🎨 " . "\033[1;36mWP Handoff CLI\033[0m" . "\n";
+    echo "===============\n\n";
+    echo "Available commands:\n";
+    echo " 🛠  handoff:create    Create a new component\n";
+    echo "\nExample:\n";
+    echo " ./cli/handoff handoff:create\n\n";
+    exit;
+}
+
+$command = $argv[1] ?? '';
+
+if ($command === 'handoff:create') {
+    // Get available types from templates directory
+    $types = array_map('basename', glob(__DIR__ . '/templates/*', GLOB_ONLYDIR));
+    
+    echo "\n🎯 \033[1;36mWhat would you like to create?\033[0m\n\n";
+    foreach ($types as $index => $type) {
+        echo " [\033[32m{$index}\033[0m] {$type}\n";
+    }
+    
+    echo "\n📌 Select type (0-" . (count($types) - 1) . "): ";
+    $typeIndex = trim(fgets(STDIN));
+    
+    if (!isset($types[$typeIndex])) {
+        echo "\n❌ \033[31mInvalid selection\033[0m\n";
+        exit(1);
+    }
+    
+    $selectedType = $types[$typeIndex];
+    
+    echo "✏️  Enter name: ";
+    $name = trim(fgets(STDIN));
+    
+    if (empty($name)) {
+        echo "\n❌ \033[31mName is required\033[0m\n";
+        exit(1);
+    }
+    
+    $cli->create($selectedType, $name);
+} else {
+    echo "\n❌ \033[31mUnknown command:\033[0m {$command}\n";
+    echo "Available commands: handoff:create\n";
+    exit(1);
+}
