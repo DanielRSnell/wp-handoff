@@ -1,0 +1,34 @@
+{
+    "name": "acf/hero",
+    "title": "Hero",
+    "description": "Hero block",
+    "style": [ "file:./styles.css" ],
+    "category": "formatting",
+    "icon": "block-default",
+    "keywords": ["hero"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "block-controller.php"
+    },
+    "supports": {
+        "align": true,
+        "mode": false,
+        "jsx": true,
+        "color": {
+            "background": true,
+            "text": true
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "example": {
+        "attributes": {
+            "mode": "preview",
+            "data": {
+                "preview_image_help": "Hero Preview"
+            }
+        }
+    }
+}
