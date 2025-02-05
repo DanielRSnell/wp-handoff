@@ -1,0 +1,15 @@
+{
+  "name": "acf/accordion",
+  "title": "Accordion",
+  "description": "An accordion block with expandable sections",
+  "category": "design",
+  "icon": "list-view",
+  "keywords": ["accordion", "expandable", "faq"],
+  "acf": {
+    "mode": "preview",
+    "renderCallback": "my_fse_theme_acf_block_render_callback"
+  },
+  "supports": {
+    "align": ["wide", "full"]
+  }
+}
