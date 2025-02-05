@@ -1,0 +1,33 @@
+{
+    "name": "acf/quote",
+    "title": "Quote",
+    "description": "Quote block",
+    "category": "formatting",
+    "icon": "block-default",
+    "keywords": ["quote"],
+    "acf": {
+        "mode": "preview",
+        "renderTemplate": "block-controller.php"
+    },
+    "supports": {
+        "align": true,
+        "mode": false,
+        "jsx": true,
+        "color": {
+            "background": true,
+            "text": true
+        },
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "example": {
+        "attributes": {
+            "mode": "preview",
+            "data": {
+                "preview_image_help": "Quote Preview"
+            }
+        }
+    }
+}
