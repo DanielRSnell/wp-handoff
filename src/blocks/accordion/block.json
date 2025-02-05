@@ -7,7 +7,7 @@
   "keywords": ["accordion", "expandable", "faq"],
   "acf": {
     "mode": "preview",
-    "renderCallback": "my_fse_theme_acf_block_render_callback"
+    "render_template": "block-controller.php"
   },
   "supports": {
     "align": ["wide", "full"]

@@ -39,16 +39,21 @@ require_once __DIR__ . '/includes/editor/admin/configure/pages.php';
 require_once __DIR__ . '/includes/editor/editor.php';
 
 /**
+ * ACF Sync Settings
+ */
+require __DIR__ . '/includes/fields/sync-settings.php';
+
+/**
  * Set up template directory
  */
-add_filter('template_include', function($template) {
+add_filter('template_include', function ($template) {
     if (isset($_GET['editor']) && $_GET['editor'] === 'true') {
         return get_template_directory() . '/includes/editor/views/editor.php';
     }
-    
+
     if (is_page()) {
         return get_template_directory() . '/templates/page.php';
     }
-    
+
     return $template;
 }, 999);

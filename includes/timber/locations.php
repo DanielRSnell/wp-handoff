@@ -11,7 +11,11 @@ class Locations {
     $paths['template'] = [
       get_stylesheet_directory() . '/src/views'
     ];
-    
+
+		$paths['block'] = [
+      get_stylesheet_directory() . '/src/blocks'
+    ];
+		
     $paths['core'] = [
       get_stylesheet_directory() . '/views/core'
     ];
