@@ -2,12 +2,13 @@
   "name": "acf/accordion",
   "title": "Accordion",
   "description": "An accordion block with expandable sections",
-  "category": "design",
+  "style": [ "file:./styles.css" ],
+  "category": "Primitive",
   "icon": "list-view",
   "keywords": ["accordion", "expandable", "faq"],
   "acf": {
     "mode": "preview",
-    "render_template": "block-controller.php"
+    "renderTemplate": "block-controller.php"
   },
   "supports": {
     "align": ["wide", "full"]

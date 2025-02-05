@@ -1,13 +1,18 @@
-<div class="accordion flex flex-col gap-2">
-    {% for item in fields.accordion_items %}
-        <div class="collapse collapse-arrow bg-base-200">
-            <input type="radio" name="{{ fields.accordion_name }}" {% if item.default_open %}checked{% endif %} />
-            <div class="collapse-title text-xl font-medium">
-                {{ item.title }}
-            </div>
-            <div class="collapse-content">
-                {{ item.content }}
-            </div>
-        </div>
-    {% endfor %}
-</div>
+{# Create a template for the block 
+
+Define Fields at top with Semantic Names
+
+Then The Markup 
+
+Then JavaScript
+
+#}
+
+{% set example = 'something' %}
+
+<div id="example">{{ example }}</div>
+
+
+<script>
+console.log('This is a block registered')
+</script>
