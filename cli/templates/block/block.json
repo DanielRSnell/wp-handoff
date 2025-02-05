@@ -2,7 +2,6 @@
     "name": "acf/{{lowercase_name}}",
     "title": "{{menu_name}}",
     "description": "{{menu_name}} block",
-    "style": [ "file:./styles.css" ],
     "category": "formatting",
     "icon": "block-default",
     "keywords": ["{{lowercase_name}}"],
