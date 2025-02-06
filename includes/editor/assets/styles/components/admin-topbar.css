@@ -1,5 +1,5 @@
 #wpadminbar {
-  background: var(--white) !important;
+  background: var(--chalk-300) !important;
   border-bottom: 1px solid var(--border) !important;
   box-shadow: var(--shadow-sm) !important;
 }

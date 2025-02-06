@@ -2,7 +2,7 @@
 #adminmenuwrap,
 #adminmenu,
 #adminmenu .wp-submenu {
-  background: white !important;
+  background: var(--chalk-300) !important;
   border-right: 1px solid var(--border) !important;
 }
 
@@ -24,6 +24,15 @@
 #adminmenu li.current a.menu-top {
   background: var(--white) !important;
   color: var(--slate-900) !important;
+}
+
+/* Sizebar Items */
+
+#adminmenu .wp-submenu-head,
+#adminmenu a.menu-top {
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  opacity: 0.8;
 }
 
 #adminmenu div.wp-menu-image:before {

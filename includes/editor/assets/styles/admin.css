@@ -74,13 +74,13 @@
 /* Buttons */
 .wp-core-ui .button,
 .wp-core-ui .button-secondary {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: var(--slate-950);
+  border: 1px solid var(--slate-900);
   border-radius: var(--radius-sm);
-  color: var(--foreground);
+  color: var(--slate-300);
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.5rem 1rem;
+  padding: 0.1rem 1rem;
   transition: all 0.15s ease;
   box-shadow: var(--shadow-sm);
 }
@@ -92,7 +92,7 @@
 }
 
 .wp-core-ui .button:hover,
-.wp-core-ui .button-secondary:hover {
+.wp-core-ui .button-secondary:--hover {
   background: var(--secondary);
   border-color: var(--slate-300);
   transform: translateY(-1px);
@@ -292,7 +292,8 @@ textarea:focus {
 /* Select2 Integration */
 .select2-container--default .select2-selection--single,
 .select2-container--default .select2-selection--multiple {
-  border-color: var(--border) !important;
+  background: var(--card-muted) !important;
+  border: 0.4px solid var(--slate-300) !important;
   border-radius: var(--radius-sm) !important;
 }
 
