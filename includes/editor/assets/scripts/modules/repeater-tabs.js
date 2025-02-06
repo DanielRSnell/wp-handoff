@@ -40,8 +40,6 @@ export function initRepeaterTabs() {
           t.classList.remove('is-active');
         });
         tab.classList.add('is-active');
-        
-        return false;
       });
 
       tabsList.appendChild(tab);

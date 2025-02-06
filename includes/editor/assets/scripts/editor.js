@@ -1,34 +1,39 @@
 import { initRepeaterTabs } from './modules/repeater-tabs.js';
 import { initCommandPalette } from './modules/command-palette/index.js';
 import { initFlexibleManager } from './modules/flexible-manager.js';
+import { LocationControls } from './modules/location-controls.js';
 
-document.addEventListener('DOMContentLoaded', function() {
-  const flexibleManager = initFlexibleManager();
+function initEditor() {
   initRepeaterTabs();
   initCommandPalette();
+  initFlexibleManager();
+  LocationControls.init();
 
-  if (typeof acf !== 'undefined') {
-    acf.addAction('append', function($el) {
+  if (typeof window.acf !== 'undefined') {
+    window.acf.addAction('append', function($el) {
       if ($el.hasClass('acf-row')) {
         initRepeaterTabs();
       }
-      // Refresh flexible manager when content changes
-      flexibleManager.refresh();
+      initFlexibleManager();
     });
 
-    acf.addAction('remove', function($el) {
+    window.acf.addAction('remove', function($el) {
       if ($el.hasClass('acf-row')) {
         initRepeaterTabs();
       }
-      // Refresh flexible manager when content changes
-      flexibleManager.refresh();
+      initFlexibleManager();
     });
 
-    // Handle sortstop event for when layouts are reordered
-    acf.addAction('sortstop', function($el) {
+    window.acf.addAction('sortstop', function($el) {
       if ($el.hasClass('values')) {
-        flexibleManager.refresh();
+        initFlexibleManager();
       }
     });
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initEditor);
+} else {
+  initEditor();
+}
