@@ -2,7 +2,7 @@
 #adminmenuwrap,
 #adminmenu,
 #adminmenu .wp-submenu {
-  background: var(--slate-50) !important;
+  background: white !important;
   border-right: 1px solid var(--border) !important;
 }
 
