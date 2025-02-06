@@ -1,11 +1,27 @@
 #wpadminbar {
-  background: var(--chalk-300) !important;
-  border-bottom: 1px solid var(--border) !important;
+  background: var(--slate-50) !important;
+  border-bottom: transparent;
+  box-shadow: none;
   box-shadow: var(--shadow-sm) !important;
 }
 
 #wpadminbar .ab-item {
   color: var(--slate-600) !important;
+}
+
+[type="checkbox"] {
+  border: 1px solid var(--slate-400) !important;
+}
+.tablenav {
+  padding-bottom: 1rem;
+}
+
+th {
+  background: var(--muted);
+}
+
+div.woocommerce-message.updated {
+  background: var(--slate-50) !important;
 }
 
 #wpadminbar .ab-item:hover {

@@ -71,6 +71,14 @@
   margin-bottom: 1rem;
 }
 
+#screen-meta-links .show-settings {
+  background: var(--muted) !important;
+}
+
+#wpadminbar .menupop .ab-sub-wrapper {
+  background: var(--card) !important;
+}
+
 /* Buttons */
 .wp-core-ui .button,
 .wp-core-ui .button-secondary {
@@ -78,9 +86,7 @@
   border: 1px solid var(--slate-900);
   border-radius: var(--radius-sm);
   color: var(--slate-300);
-  font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.1rem 1rem;
   transition: all 0.15s ease;
   box-shadow: var(--shadow-sm);
 }

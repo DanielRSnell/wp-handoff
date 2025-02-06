@@ -52,5 +52,9 @@
   --card-foreground: var(--slate-900);
   --card-muted: var(--slate-50);
   --card-border: var(--slate-200);
-  --border: var(--slate-100);
+  --border: var(--slate-200);
+}
+
+.postbox-header {
+  background: var(--card-muted);
 }

@@ -35,3 +35,24 @@ add_action('after_setup_theme', function () {
         'script',
     ]);
 });
+
+function add_inter_font_admin()
+{
+    wp_enqueue_style('inter-font', 'https://rsms.me/inter/inter.css', [], null);
+
+    $custom_css = "
+        html, body, input, select, textarea, button, td, th, p, h1, h2, h3, h4, h5, h6, a {
+            font-family: 'Inter'!important;
+        }
+       body.wp-admin,
+       .wp-admin input,
+       .wp-admin select,
+       .wp-admin textarea,
+       .wp-admin button {
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+       }
+   ";
+
+    wp_add_inline_style('admin-bar', $custom_css);
+}
+add_action('admin_enqueue_scripts', 'add_inter_font_admin');
