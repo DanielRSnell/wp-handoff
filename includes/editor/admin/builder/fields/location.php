@@ -4,7 +4,7 @@ if (! function_exists('acf_add_local_field_group')) {
     return;
 }
 
-require_once __DIR__ . '/data.php';
+require_once get_template_directory() . '/includes/editor/admin/builder/data/controller.php';
 
 add_action('admin_enqueue_scripts', function () {
     if (get_current_screen()->post_type === 'layout') {
