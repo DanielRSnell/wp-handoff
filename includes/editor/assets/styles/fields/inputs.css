@@ -1,5 +1,4 @@
 .acf-fields {
-  gap: 1.5rem;
   display: flex;
   flex-direction: column;
   background: transparent;
@@ -7,7 +6,6 @@
 
 .acf-fields > .acf-field {
   padding: 0;
-  margin-bottom: 1.5rem;
 
   background: transparent;
 }

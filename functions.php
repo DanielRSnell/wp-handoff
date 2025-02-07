@@ -19,7 +19,7 @@ require_once __DIR__ . '/includes/editor/admin/configure/pages.php';
 require_once __DIR__ . '/includes/editor/admin/builder/init.php';
 require_once __DIR__ . '/includes/fields/sync-settings.php';
 require_once __DIR__ . '/includes/editor/editor.php';
-require_once __DIR__ . '/src/templates/router/controller.php';
+require_once __DIR__ . '/src/router/controller.php';
 
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
