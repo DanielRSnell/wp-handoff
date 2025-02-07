@@ -6,11 +6,5 @@ return [
     'name' => 'layout_type',
     'type' => 'select',
     'required' => 1,
-    'choices' => [
-        'header' => 'Header',
-        'footer' => 'Footer',
-        'template' => 'Template',
-        'block' => 'Block',
-        'admin' => 'Admin'
-    ]
+    'choices' => 
 ];
