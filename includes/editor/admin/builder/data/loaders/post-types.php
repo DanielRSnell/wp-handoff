@@ -1,7 +1,6 @@
 <?php
 
-function get_context_post_types()
-{
+function get_context_post_types() {
     $post_types = get_post_types([
         'public' => true,
     ], 'objects');
@@ -17,5 +16,5 @@ function get_context_post_types()
         ];
     }
 
-    return $formatted;
+    return apply_filters('wp_handoff_post_types', $formatted);
 }

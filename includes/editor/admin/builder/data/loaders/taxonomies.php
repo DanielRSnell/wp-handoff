@@ -1,7 +1,6 @@
 <?php
 
-function get_context_taxonomies()
-{
+function get_context_taxonomies() {
     $taxonomies = get_taxonomies([
         'public' => true,
     ], 'objects');
@@ -16,5 +15,5 @@ function get_context_taxonomies()
         ];
     }
 
-    return $formatted;
+    return apply_filters('wp_handoff_taxonomies', $formatted);
 }

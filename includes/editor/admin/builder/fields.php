@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('acf_add_local_field_group')) {
+if (!function_exists('acf_add_local_field_group')) {
     return;
 }
 
@@ -28,58 +28,64 @@ add_action('acf/input/admin_enqueue_scripts', function () {
     );
 });
 
-// Register field group after init
+// Register field group after init and post types are registered
 add_action('acf/init', function () {
-    // Load field definitions inside the hook
-    $location_fields = require_once __DIR__ . '/fields/location.php';
-    $preview_fields  = require_once __DIR__ . '/fields/preview.php';
+    // Wait for post types to be registered
+    add_action('wp_loaded', function () {
+        // Load data controller
+        require_once __DIR__ . '/data/controller.php';
 
-    acf_add_local_field_group([
-        'key'                   => 'group_template_settings',
-        'title'                 => 'Template Settings',
-        'fields'                => [
-            [
-                'key'       => 'field_template_tabs',
-                'label'     => 'Template Settings',
-                'name'      => 'template_tabs',
-                'type'      => 'tabs',
-                'placement' => 'top',
-                'endpoint'  => 0,
-            ],
-            [
-                'key'       => 'field_location_tab',
-                'label'     => 'Location',
-                'name'      => '',
-                'type'      => 'tab',
-                'placement' => 'top',
-                'endpoint'  => 0,
-            ],
-            $location_fields,
-            [
-                'key'       => 'field_preview_tab',
-                'label'     => 'Preview',
-                'name'      => '',
-                'type'      => 'tab',
-                'placement' => 'top',
-                'endpoint'  => 0,
-            ],
-            $preview_fields,
-        ],
-        'location'              => [
-            [
+        // Load field definitions
+        $location_fields = require __DIR__ . '/fields/location.php';
+        $preview_fields = require __DIR__ . '/fields/preview.php';
+
+        acf_add_local_field_group([
+            'key' => 'group_template_settings',
+            'title' => 'Template Settings',
+            'fields' => [
                 [
-                    'param'    => 'post_type',
-                    'operator' => '==',
-                    'value'    => 'layout',
+                    'key' => 'field_template_tabs',
+                    'label' => 'Template Settings',
+                    'name' => 'template_tabs',
+                    'type' => 'tabs',
+                    'placement' => 'top',
+                    'endpoint' => 0,
+                ],
+                [
+                    'key' => 'field_location_tab',
+                    'label' => 'Location',
+                    'name' => '',
+                    'type' => 'tab',
+                    'placement' => 'top',
+                    'endpoint' => 0,
+                ],
+                $location_fields,
+                [
+                    'key' => 'field_preview_tab',
+                    'label' => 'Preview',
+                    'name' => '',
+                    'type' => 'tab',
+                    'placement' => 'top',
+                    'endpoint' => 0,
+                ],
+                $preview_fields,
+            ],
+            'location' => [
+                [
+                    [
+                        'param' => 'post_type',
+                        'operator' => '==',
+                        'value' => 'layout',
+                    ],
                 ],
             ],
-        ],
-        'menu_order'            => 0,
-        'position'              => 'side',
-        'style'                 => 'seamless',
-        'label_placement'       => 'top',
-        'instruction_placement' => 'label',
-        'hide_on_screen'        => '',
-        'active'                => true,
-    ]);
-});
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'seamless',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+        ]);
+    }, 20); // Priority 20 to ensure it runs after post types are registered
+}, 20); // Priority 20 to ensure it runs after ACF is fully initialized

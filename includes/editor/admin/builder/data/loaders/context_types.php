@@ -1,8 +1,7 @@
 <?php
 
-function get_context_types()
-{
-    return [
+function get_context_types() {
+    $types = [
         'front_page'     => 'Front Page',
         'blog_index'     => 'Blog Index',
         '404'            => '404 Page',
@@ -15,4 +14,5 @@ function get_context_types()
         'route'          => 'Custom Route',
     ];
 
+    return apply_filters('wp_handoff_context_types', $types);
 }

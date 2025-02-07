@@ -1,5 +1,8 @@
 <?php
 
+require_once dirname(__FILE__) . '/../../data/controller.php';
+$data = get_all_location_data();
+
 return [
     [
         'key' => 'field_context_type',
@@ -7,18 +10,7 @@ return [
         'name' => 'context_type',
         'type' => 'select',
         'required' => 1,
-        'choices' => [
-            'front_page' => 'Front Page',
-            'blog_index' => 'Blog Index',
-            '404' => '404 Page',
-            'search' => 'Search Results',
-            'date_archive' => 'Date Archive',
-            'author_archive' => 'Author Archive',
-            'post_type' => 'Post Type',
-            'taxonomy' => 'Taxonomy',
-            'hook' => 'Custom Hook',
-            'route' => 'Custom Route'
-        ],
+        'choices' => $data['context_types'],
         'conditional_logic' => [
             [
                 [
@@ -34,7 +26,9 @@ return [
         'label' => 'Select Taxonomy',
         'name' => 'taxonomy_type',
         'type' => 'select',
-        'choices' => [],
+        'choices' => array_map(function($tax) {
+            return $tax['label'];
+        }, $data['taxonomies']),
         'conditional_logic' => [
             [
                 [
@@ -69,7 +63,9 @@ return [
         'label' => 'Post Type',
         'name' => 'post_type',
         'type' => 'select',
-        'choices' => [],
+        'choices' => array_map(function($pt) {
+            return $pt['label'];
+        }, $data['post_types']),
         'conditional_logic' => [
             [
                 [
