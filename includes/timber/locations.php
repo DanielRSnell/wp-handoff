@@ -12,12 +12,16 @@ class Locations {
       get_stylesheet_directory() . '/src/views'
     ];
 
-		$paths['block'] = [
+    $paths['block'] = [
       get_stylesheet_directory() . '/src/blocks'
     ];
-		
+    
     $paths['core'] = [
       get_stylesheet_directory() . '/views/core'
+    ];
+
+    $paths['editor'] = [
+      get_stylesheet_directory() . '/includes/editor'
     ];
     
     return $paths;
