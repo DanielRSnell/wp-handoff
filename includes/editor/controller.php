@@ -9,7 +9,7 @@ class Editor
 
     public function __construct()
     {
-        $this->styles_path  = get_template_directory() . '/includes/editor/assets/styles';
+        $this->styles_path = get_template_directory() . '/includes/editor/assets/styles';
         $this->scripts_path = get_template_directory() . '/includes/editor/assets/scripts';
 
         add_action('init', [$this, 'init']);
@@ -74,11 +74,11 @@ class Editor
         );
 
         wp_localize_script('wp-handoff-editor', 'wpHandoff', [
-            'ajaxUrl'        => admin_url('admin-ajax.php'),
-            'nonce'          => wp_create_nonce('wp_handoff_nonce'),
-            'isEditor'       => $this->isEditorMode(),
-            'isPreview'      => $this->isPreviewMode(),
-            'currentScreen'  => get_current_screen()->id,
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('wp_handoff_nonce'),
+            'isEditor' => $this->isEditorMode(),
+            'isPreview' => $this->isPreviewMode(),
+            'currentScreen' => get_current_screen()->id,
             'editorSettings' => $this->getEditorSettings(),
         ]);
 
@@ -146,7 +146,7 @@ class Editor
 
     public function loadEditorTemplate($template)
     {
-        return get_template_directory() . '/includes/editor/views/editor.php';
+        return get_template_directory() . '/includes/editor/views/render-editor.php';
     }
 
     public function getEditorStyles()
@@ -174,8 +174,8 @@ class Editor
     private function registerEditorSettings()
     {
         register_setting('wp_handoff_editor', 'wp_handoff_editor_settings', [
-            'type'              => 'object',
-            'default'           => $this->getDefaultEditorSettings(),
+            'type' => 'object',
+            'default' => $this->getDefaultEditorSettings(),
             'sanitize_callback' => [$this, 'sanitizeEditorSettings'],
         ]);
     }
@@ -183,22 +183,22 @@ class Editor
     private function getDefaultEditorSettings()
     {
         return [
-            'previewMode'      => 'desktop',
-            'showGrid'         => true,
-            'gridColumns'      => 12,
-            'gridGutter'       => 20,
-            'snapToGrid'       => true,
-            'showOutlines'     => true,
-            'showInspector'    => true,
-            'autoSave'         => true,
+            'previewMode' => 'desktop',
+            'showGrid' => true,
+            'gridColumns' => 12,
+            'gridGutter' => 20,
+            'snapToGrid' => true,
+            'showOutlines' => true,
+            'showInspector' => true,
+            'autoSave' => true,
             'autoSaveInterval' => 60,
-            'theme'            => 'system',
+            'theme' => 'system',
         ];
     }
 
     public function sanitizeEditorSettings($settings)
     {
-        $defaults  = $this->getDefaultEditorSettings();
+        $defaults = $this->getDefaultEditorSettings();
         $sanitized = [];
 
         foreach ($defaults as $key => $default) {

@@ -85,7 +85,7 @@ class ThemeSetup
         require_once get_template_directory() . '/includes/admin/configure/pages.php';
         require_once get_template_directory() . '/includes/admin/builder/init.php';
         require_once get_template_directory() . '/includes/fields/sync-settings.php';
-        require_once get_template_directory() . '/includes/editor/editor.php';
+        require_once get_template_directory() . '/includes/editor/controller.php';
 
         add_action('admin_enqueue_scripts', [$this, 'adminStyles']);
     }
