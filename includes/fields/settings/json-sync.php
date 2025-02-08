@@ -1,27 +1,30 @@
 <?php
 
-function my_acf_json_save_point($path) {
-    $path = get_stylesheet_directory() . '/src/json-store';
+function my_acf_json_save_point($path)
+{
+    $path = get_stylesheet_directory() . '/json-store';
     if (!is_dir($path)) {
         wp_mkdir_p($path);
     }
     return $path;
 }
 
-function my_acf_json_load_point($paths) {
-    $paths[] = get_stylesheet_directory() . '/src/json-store';
+function my_acf_json_load_point($paths)
+{
+    $paths[] = get_stylesheet_directory() . '/json-store';
     return array_unique($paths);
 }
 
-function custom_acf_json_save_paths($paths, $post) {
-    $directory = get_stylesheet_directory() . '/src/json-store';
-    
+function custom_acf_json_save_paths($paths, $post)
+{
+    $directory = get_stylesheet_directory() . '/json-store';
+
     $subdirs = [
         'blocks' => ['param' => 'block'],
         'fields' => ['type' => 'acf-field-group'],
         'post-types' => ['type' => 'acf-post-type'],
         'taxonomy' => ['type' => 'acf-taxonomy'],
-        'options' => ['type' => 'acf-ui-options-page']
+        'options' => ['type' => 'acf-ui-options-page'],
     ];
 
     foreach ($subdirs as $subdir => $conditions) {
@@ -51,22 +54,23 @@ function custom_acf_json_save_paths($paths, $post) {
     return $paths;
 }
 
-function sync_acf_fields() {
+function sync_acf_fields()
+{
     $groups = acf_get_local_field_groups();
     foreach ($groups as $group) {
         $key = $group['key'];
-        $path = get_stylesheet_directory() . '/src/json-store';
-        
+        $path = get_stylesheet_directory() . '/json-store';
+
         if (isset($group['location'][0][0]['param']) && $group['location'][0][0]['param'] === 'block') {
             $path .= '/blocks';
         } else {
             $path .= '/fields';
         }
-        
+
         if (!is_dir($path)) {
             wp_mkdir_p($path);
         }
-        
+
         $file = $path . '/' . $key . '.json';
         $json = acf_prepare_field_group_for_export($group);
         file_put_contents($file, json_encode($json, JSON_PRETTY_PRINT));

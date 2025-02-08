@@ -4,21 +4,8 @@ if (!function_exists('acf_add_local_field_group')) {
     return;
 }
 
-// Load AJAX handlers first since they don't depend on post type registration
-require_once __DIR__ . '/ajax/location-types.php';
-require_once __DIR__ . '/ajax/location-items.php';
-require_once __DIR__ . '/ajax/preview-options.php';
-
 // Enqueue scripts
 add_action('acf/input/admin_enqueue_scripts', function () {
-    wp_enqueue_script(
-        'location-controls',
-        get_template_directory_uri() . '/includes/admin/builder/assets/js/location-controls.js',
-        ['jquery', 'acf-input'],
-        '1.0.0',
-        true
-    );
-
     wp_enqueue_script(
         'preview-controls',
         get_template_directory_uri() . '/includes/admin/builder/assets/js/preview-controls.js',
