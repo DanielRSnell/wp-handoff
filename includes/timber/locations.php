@@ -2,30 +2,33 @@
 
 namespace Umbral\Timber;
 
-class Locations {
-  public function __construct() {
-    add_filter('timber/locations', [$this, 'addLocations']);
-  }
+class Locations
+{
+    public function __construct()
+    {
+        add_filter('timber/locations', [$this, 'addLocations']);
+    }
 
-  public function addLocations($paths) {
-    $paths['template'] = [
-      get_stylesheet_directory() . '/src/views'
-    ];
+    public function addLocations($paths)
+    {
+        $paths['template'] = [
+            get_stylesheet_directory() . '/src/views',
+        ];
 
-    $paths['block'] = [
-      get_stylesheet_directory() . '/src/blocks'
-    ];
-    
-    $paths['core'] = [
-      get_stylesheet_directory() . '/views/core'
-    ];
+        $paths['block'] = [
+            get_stylesheet_directory() . '/src/blocks',
+        ];
 
-    $paths['editor'] = [
-      get_stylesheet_directory() . '/includes/editor'
-    ];
-    
-    return $paths;
-  }
+        $paths['core'] = [
+            get_stylesheet_directory() . '/views/core',
+        ];
+
+        $paths['editor'] = [
+            get_stylesheet_directory() . '/includes/editor',
+        ];
+
+        return $paths;
+    }
 }
 
 return new Locations();

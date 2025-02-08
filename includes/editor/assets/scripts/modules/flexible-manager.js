@@ -1,4 +1,18 @@
 export function initFlexibleManager() {
+  window.layout = {
+      collapseAll() {
+        document.querySelectorAll('.layout').forEach(layout => {
+          layout.classList.add('-collapsed');
+          const toggleBtn = layout.querySelector('[data-name="collapse-layout"]');
+          if (toggleBtn) {
+            toggleBtn.classList.remove('-clear');
+          }
+        });
+      }
+    }
+
+  window.layout.collapseAll(); 
+
   document.addEventListener('click', (e) => {
     const collapseButton = e.target.closest('[data-name="collapse-layout"]');
     if (!collapseButton) return;
@@ -42,6 +56,6 @@ export function initFlexibleManager() {
           newToggle.classList.add('-clear');
         }
       }
-    });
+    });    
   }
 }

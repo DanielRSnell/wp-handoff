@@ -1,243 +1,102 @@
 <?php
 namespace Umbral\Editor;
 
+require_once __DIR__ . '/autoload.php';
+
+use Umbral\Editor\Handlers\AssetsHandler;
+use Umbral\Editor\Handlers\ContextHandler;
+use Umbral\Editor\Handlers\SaveHandler;
+use Umbral\Editor\Handlers\SettingsHandler;
+use Umbral\Editor\Handlers\TemplateHandler;
+
 class Editor
 {
     private $version = '1.0.0';
+    private static $instance = null;
+    private $assets_handler;
+    private $settings_handler;
+    private $template_handler;
+    private $save_handler;
+    private $context_handler;
     private $styles_path;
     private $scripts_path;
+    private $views_path;
 
-    public function __construct()
+    public static function getInstance()
+    {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    private function __construct()
+    {
+        $this->setupPaths();
+        $this->initializeHandlers();
+        $this->setupHooks();
+    }
+
+    private function setupPaths()
     {
         $this->styles_path = get_template_directory() . '/includes/editor/assets/styles';
         $this->scripts_path = get_template_directory() . '/includes/editor/assets/scripts';
+    }
 
+    private function initializeHandlers()
+    {
+        $this->assets_handler = new AssetsHandler($this, $this->version, $this->styles_path, $this->scripts_path);
+        $this->settings_handler = new SettingsHandler($this);
+        $this->template_handler = new TemplateHandler($this);
+        $this->save_handler = new SaveHandler($this);
+        $this->context_handler = new ContextHandler($this);
+    }
+
+    private function setupHooks()
+    {
         add_action('init', [$this, 'init']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
-        add_action('admin_head', [$this, 'addInlineStyles']);
-        add_action('admin_body_class', [$this, 'addBodyClasses']);
-        add_filter('admin_footer_text', [$this, 'customFooterText']);
+        add_action('admin_enqueue_scripts', [$this->assets_handler, 'enqueueAssets']);
+        add_action('wp_enqueue_scripts', [$this->assets_handler, 'enqueueFrontendAssets']);
+        add_filter('template_include', [$this->template_handler, 'loadTemplate'], 999999);
+        add_filter('show_admin_bar', [$this, 'hideAdminBar']);
+        add_action('wp_ajax_editor_save', [$this->save_handler, 'handleSave']);
+        add_filter('timber/context', [$this->context_handler, 'extendContext']);
+        add_action('admin_head', [$this->assets_handler, 'addInlineStyles']);
+        add_action('wp_head', [$this->assets_handler, 'addInlineStyles']);
     }
 
     public function init()
     {
-        if ($this->isEditorMode()) {
-            add_filter('show_admin_bar', '__return_false');
-            add_filter('template_include', [$this, 'loadEditorTemplate']);
-            add_filter('body_class', [$this, 'addFrontendBodyClasses']);
+        if (!function_exists('acf_form_head')) {
+            return;
         }
 
-        if ($this->isPreviewMode()) {
-            add_filter('show_admin_bar', '__return_false');
-            add_filter('body_class', [$this, 'addPreviewBodyClasses']);
+        if ($this->isEditorMode() || $this->isPreviewMode()) {
+            remove_all_actions('wp_head');
+            remove_all_actions('wp_footer');
+            acf_form_head();
+            add_action('wp_head', 'wp_enqueue_scripts', 1);
+            add_action('wp_head', 'wp_print_styles', 8);
+            add_action('wp_head', 'wp_print_head_scripts', 9);
+            add_action('wp_head', 'wp_site_icon', 99);
+            add_action('wp_head', [$this, 'addEditorMeta']);
         }
 
-        $this->registerEditorSettings();
+        $this->settings_handler->registerSettings();
     }
 
-    public function enqueueAssets($hook)
+    public function addEditorMeta()
     {
-        wp_enqueue_style(
-            'wp-handoff-admin',
-            get_template_directory_uri() . '/includes/editor/assets/styles/admin.css',
-            [],
-            $this->version
-        );
+        echo '<meta name="editor-version" content="' . esc_attr($this->version) . '">';
+        echo '<meta name="editor-mode" content="' . ($this->isEditorMode() ? 'edit' : 'preview') . '">';
+    }
 
-        // Enqueue on all admin pages
-        $this->enqueueEditorAssets();
-        $this->enqueueLayoutAssets();
-
-// Keep media and editor enqueuing for layout screen
-        if ($this->isLayoutScreen()) {
-            wp_enqueue_media();
-            wp_enqueue_editor();
+    public function hideAdminBar($show)
+    {
+        if ($this->isEditorMode() || $this->isPreviewMode()) {
+            return false;
         }
-
-    }
-
-    private function enqueueEditorAssets()
-    {
-        wp_enqueue_style(
-            'wp-handoff-editor',
-            get_template_directory_uri() . '/includes/editor/assets/styles/editor.css',
-            [],
-            $this->version
-        );
-
-        wp_enqueue_script(
-            'wp-handoff-editor',
-            get_template_directory_uri() . '/includes/editor/assets/scripts/editor.js',
-            ['jquery', 'acf-input'],
-            $this->version,
-            true
-        );
-
-        wp_localize_script('wp-handoff-editor', 'wpHandoff', [
-            'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('wp_handoff_nonce'),
-            'isEditor' => $this->isEditorMode(),
-            'isPreview' => $this->isPreviewMode(),
-            'currentScreen' => get_current_screen()->id,
-            'editorSettings' => $this->getEditorSettings(),
-        ]);
-
-        add_filter('script_loader_tag', function ($tag, $handle, $src) {
-            if ($handle === 'wp-handoff-editor') {
-                return '<script type="module" src="' . esc_url($src) . '"></script>';
-            }
-            return $tag;
-        }, 10, 3);
-    }
-
-    private function enqueueLayoutAssets()
-    {
-        wp_enqueue_style(
-            'wp-handoff-layout',
-            get_template_directory_uri() . '/includes/editor/assets/styles/layout.css',
-            [],
-            $this->version
-        );
-
-        wp_enqueue_script(
-            'wp-handoff-layout',
-            get_template_directory_uri() . '/includes/editor/assets/scripts/layout.js',
-            ['jquery', 'acf-input', 'wp-handoff-editor'],
-            $this->version,
-            true
-        );
-    }
-
-    public function addInlineStyles()
-    {
-        if ($this->isLayoutScreen() || $this->isEditorMode()) {
-            echo '<style>' . $this->getEditorStyles() . '</style>';
-        }
-    }
-
-    public function addBodyClasses($classes)
-    {
-        if ($this->isLayoutScreen()) {
-            $classes .= ' wp-handoff-layout';
-        }
-        if ($this->isEditorMode()) {
-            $classes .= ' wp-handoff-editor-mode';
-        }
-        if ($this->isPreviewMode()) {
-            $classes .= ' wp-handoff-preview-mode';
-        }
-        return $classes;
-    }
-
-    public function addFrontendBodyClasses($classes)
-    {
-        $classes[] = 'wp-handoff-frontend';
-        if ($this->isEditorMode()) {
-            $classes[] = 'wp-handoff-editor-active';
-        }
-        return $classes;
-    }
-
-    public function addPreviewBodyClasses($classes)
-    {
-        $classes[] = 'wp-handoff-preview';
-        return $classes;
-    }
-
-    public function loadEditorTemplate($template)
-    {
-        return get_template_directory() . '/includes/editor/views/render-editor.php';
-    }
-
-    public function getEditorStyles()
-    {
-        return $this->concatenateStyles([
-            $this->styles_path . '/base/*.css',
-            $this->styles_path . '/layout/*.css',
-            $this->styles_path . '/fields/*.css',
-            $this->styles_path . '/components/*.css',
-        ]);
-    }
-
-    private function concatenateStyles($patterns)
-    {
-        $styles = '';
-        foreach ($patterns as $pattern) {
-            $files = glob($pattern);
-            foreach ($files as $file) {
-                $styles .= file_get_contents($file) . "\n";
-            }
-        }
-        return $styles;
-    }
-
-    private function registerEditorSettings()
-    {
-        register_setting('wp_handoff_editor', 'wp_handoff_editor_settings', [
-            'type' => 'object',
-            'default' => $this->getDefaultEditorSettings(),
-            'sanitize_callback' => [$this, 'sanitizeEditorSettings'],
-        ]);
-    }
-
-    private function getDefaultEditorSettings()
-    {
-        return [
-            'previewMode' => 'desktop',
-            'showGrid' => true,
-            'gridColumns' => 12,
-            'gridGutter' => 20,
-            'snapToGrid' => true,
-            'showOutlines' => true,
-            'showInspector' => true,
-            'autoSave' => true,
-            'autoSaveInterval' => 60,
-            'theme' => 'system',
-        ];
-    }
-
-    public function sanitizeEditorSettings($settings)
-    {
-        $defaults = $this->getDefaultEditorSettings();
-        $sanitized = [];
-
-        foreach ($defaults as $key => $default) {
-            if (isset($settings[$key])) {
-                $sanitized[$key] = $this->sanitizeSettingValue($settings[$key], $default);
-            } else {
-                $sanitized[$key] = $default;
-            }
-        }
-
-        return $sanitized;
-    }
-
-    private function sanitizeSettingValue($value, $default)
-    {
-        switch (gettype($default)) {
-            case 'boolean':
-                return (bool) $value;
-            case 'integer':
-                return (int) $value;
-            case 'string':
-                return sanitize_text_field($value);
-            default:
-                return $default;
-        }
-    }
-
-    public function getEditorSettings()
-    {
-        $settings = get_option('wp_handoff_editor_settings', $this->getDefaultEditorSettings());
-        return wp_parse_args($settings, $this->getDefaultEditorSettings());
-    }
-
-    public function customFooterText($text)
-    {
-        if ($this->isLayoutScreen()) {
-            return 'Built with WP Handoff Editor';
-        }
-        return $text;
+        return $show;
     }
 
     public function isEditorMode()
@@ -255,6 +114,76 @@ class Editor
         $screen = get_current_screen();
         return $screen && $screen->post_type === 'layout';
     }
+
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    public function getEditorStyles()
+    {
+        return $this->assets_handler->getEditorStyles();
+    }
+
+    public function getReturnUrl()
+    {
+        return $this->template_handler->getReturnUrl();
+    }
+
+    public function getCurrentUrl()
+    {
+        return $this->template_handler->getCurrentUrl();
+    }
+
+    public function getEditorSettings()
+    {
+        return $this->settings_handler->getSettings();
+    }
+
+    public function getContext()
+    {
+        return $this->context_handler->getEditorContext();
+    }
+
+    public function getStylesPath()
+    {
+        return $this->styles_path;
+    }
+
+    public function getScriptsPath()
+    {
+        return $this->scripts_path;
+    }
+
+    public function getViewsPath()
+    {
+        return $this->views_path;
+    }
+
+    public function getAssetsHandler()
+    {
+        return $this->assets_handler;
+    }
+
+    public function getSettingsHandler()
+    {
+        return $this->settings_handler;
+    }
+
+    public function getTemplateHandler()
+    {
+        return $this->template_handler;
+    }
+
+    public function getSaveHandler()
+    {
+        return $this->save_handler;
+    }
+
+    public function getContextHandler()
+    {
+        return $this->context_handler;
+    }
 }
 
-return new Editor();
+return Editor::getInstance();

@@ -30,6 +30,7 @@ class ThemeSetup
 
         if (class_exists('Timber')) {
             require_once get_template_directory() . '/includes/timber/locations.php';
+            require_once get_template_directory() . '/includes/timber/twig-functions.php';
         }
 
         if (function_exists('acf_add_local_field_group')) {
