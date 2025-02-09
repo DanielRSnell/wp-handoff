@@ -1,3 +1,5 @@
+import { extractComponents } from './utils.js';
+
 export class CommandPaletteWindow {
   constructor() {
     this.isOpen = false;
@@ -79,7 +81,7 @@ export class CommandPaletteWindow {
       switch(e.key) {
         case 'Escape':
           e.preventDefault();
-          window.CommandPalette.close();
+          this.close();
           break;
 
         case 'ArrowDown':
@@ -109,29 +111,17 @@ export class CommandPaletteWindow {
       }
     });
 
-    this.overlay.addEventListener('click', () => window.CommandPalette.close());
+    this.overlay.addEventListener('click', () => this.close());
   }
 
-  switchView(mode) {
-    this.viewMode = mode;
-    this.viewButtons.forEach(b => {
-      b.classList.toggle('is-active', b.dataset.view === mode);
-    });
-    this.renderComponents();
-  }
-
-  open(button, components) {
+  open() {
     this.isOpen = true;
-    this.activeButton = button;
-    this.components = components;
-    this.filteredComponents = [...components];
+    this.components = extractComponents();
+    this.filteredComponents = [...this.components];
     this.selectedIndex = 0;
     
     this.overlay.style.display = 'block';
     this.palette.style.display = 'block';
-    
-    this.overlay.offsetHeight;
-    this.palette.offsetHeight;
     
     requestAnimationFrame(() => {
       this.overlay.classList.add('is-active');
@@ -160,7 +150,14 @@ export class CommandPaletteWindow {
     };
     
     this.overlay.addEventListener('transitionend', onTransitionEnd);
-    this.activeButton = null;
+  }
+
+  switchView(mode) {
+    this.viewMode = mode;
+    this.viewButtons.forEach(b => {
+      b.classList.toggle('is-active', b.dataset.view === mode);
+    });
+    this.renderComponents();
   }
 
   filterComponents() {
@@ -172,12 +169,43 @@ export class CommandPaletteWindow {
   }
 
   renderComponents() {
+    if (this.filteredComponents.length === 0) {
+      this.renderEmptyState();
+      return;
+    }
+
     if (this.viewMode === 'grid') {
       this.renderGridView();
     } else {
       this.renderListView();
     }
     this.updateSelection();
+  }
+
+  renderEmptyState() {
+    const searchTerm = this.searchInput.value;
+    const message = searchTerm 
+      ? `No components found matching "${searchTerm}"`
+      : 'No components available';
+
+    this.content.innerHTML = `
+      <div class="command-palette__empty">
+        <div class="command-palette__empty-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M16 16s-1.5-2-4-2-4 2-4 2"/>
+            <line x1="9" y1="9" x2="9.01" y2="9"/>
+            <line x1="15" y1="9" x2="15.01" y2="9"/>
+          </svg>
+        </div>
+        <p class="command-palette__empty-text">${message}</p>
+        ${searchTerm ? `
+          <button class="command-palette__empty-button" onclick="this.closest('.command-palette').querySelector('.command-palette__search').value = ''; this.closest('.command-palette').querySelector('.command-palette__search').focus();">
+            Clear search
+          </button>
+        ` : ''}
+      </div>
+    `;
   }
 
   renderListView() {
@@ -204,9 +232,9 @@ export class CommandPaletteWindow {
 
       item.addEventListener('click', () => {
         const layout = item.dataset.layout;
-        if (window.handoff && typeof window.handoff.addLayout === 'function') {
+        if (window.handoff?.addLayout) {
           window.handoff.addLayout(layout);
-          window.CommandPalette.close();
+          this.close();
         }
       });
     });
@@ -239,9 +267,9 @@ export class CommandPaletteWindow {
 
       item.addEventListener('click', () => {
         const layout = item.dataset.layout;
-        if (window.handoff && typeof window.handoff.addLayout === 'function') {
+        if (window.handoff?.addLayout) {
           window.handoff.addLayout(layout);
-          window.CommandPalette.close();
+          this.close();
         }
       });
     });
@@ -262,9 +290,9 @@ export class CommandPaletteWindow {
   selectComponent(component) {
     if (!component) return;
     
-    if (window.handoff && typeof window.handoff.addLayout === 'function') {
+    if (window.handoff?.addLayout) {
       window.handoff.addLayout(component.layout);
-      window.CommandPalette.close();
+      this.close();
     }
   }
 }
